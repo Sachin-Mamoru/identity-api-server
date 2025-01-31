@@ -95,6 +95,173 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /authenticators/eDUwOUNlcnRpZmljYXRlQXV0aGVudGljYXRvcg/validators:
+    get:
+      summary: Get all x509 certificate authenticator validator configurations
+      operationId: getX509CertificateAuthenticatorValidators
+      tags:
+        - X509 Certificate Authenticator Validators
+      responses:
+        "200":
+          description: List of all validators
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  validators:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Validator"
+  /authenticators/eDUwOUNlcnRpZmljYXRlQXV0aGVudGljYXRvcg/validators/{validatorName}:
+    get:
+      summary: Get a specific x509 certificate authenticator validator configuration
+      operationId: getX509CertificateAuthenticatorValidator
+      tags:
+        - X509 Certificate Authenticator Validators
+      parameters:
+        - name: validatorName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Validator details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Validator"
+    put:
+      summary: Update the x509 certificate authenticator validator configuration
+      operationId: updateX509CertificateAuthenticatorValidator
+      tags:
+        - X509 Certificate Authenticator Validators
+      parameters:
+        - name: validatorName
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Validator"
+      responses:
+        "200":
+          description: Validator updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /authenticators/eDUwOUNlcnRpZmljYXRlQXV0aGVudGljYXRvcg/ca-certificates:
+    get:
+      summary: Get all x509 certificate authenticator CA certificates
+      operationId: getX509CertificateAuthenticatorCACertificates
+      tags:
+        - X509 Certificate Authenticator CA Certificates
+      responses:
+        "200":
+          description: List of all CA certificates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  certificates:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/CACertificate"
+    post:
+      summary: Add a new CA certificate to x509 certificate authenticator
+      operationId: addX509CertificateAuthenticatorCACertificate
+      tags:
+        - X509 Certificate Authenticator CA Certificates
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CACertificateAddRequest"
+      responses:
+        "201":
+          description: Certificate added successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CACertificate"
+  /authenticators/eDUwOUNlcnRpZmljYXRlQXV0aGVudGljYXRvcg/ca-certificates/{certificate-id}:
+    get:
+      summary: Get a x509 certificate authenticator certificate by certificate id
+      operationId: getX509CertificateAuthenticatorCertificateById
+      tags:
+        - X509 Certificate Authenticator CA Certificates
+      parameters:
+        - name: certificate-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Certificate details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CACertificate"
+    put:
+      summary: Update a x509 certificate authenticator certificate by certificate id
+      operationId: updateX509CertificateAuthenticatorCertificateById
+      tags:
+        - X509 Certificate Authenticator CA Certificates
+      parameters:
+        - name: certificate-id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CACertificateUpdateRequest"
+      responses:
+        "200":
+          description: Certificate updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    delete:
+      summary: Delete a x509 certificate authenticator certificate by certificate id
+      operationId: deleteX509CertificateAuthenticatorCertificateById
+      tags:
+        - X509 Certificate Authenticator CA Certificates
+      parameters:
+        - name: certificate-id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Certificate deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
   /authenticators/meta/tags:
     get:
       tags:
@@ -360,6 +527,49 @@ components:
         self:
           type: string
           example: /t/carbon.super/api/server/v1/configs/authenticators/eDUwOUNlcnRpZmljYXRlQXV0aGVudGljYXRvcg
+    Validator:
+      type: object
+      properties:
+        name:
+          type: string
+        enable:
+          type: boolean
+        priority:
+          type: integer
+        fullChainValidation:
+          type: boolean
+        retryCount:
+          type: integer
+
+    CACertificate:
+      type: object
+      properties:
+        issuerDN:
+          type: string
+        crlUrls:
+          type: array
+          items:
+            type: string
+        ocspUrls:
+          type: array
+          items:
+            type: string
+        certId:
+          type: string
+        serialNumber:
+          type: string
+
+    CACertificateAddRequest:
+      type: object
+      properties:
+        certificateContent:
+          type: string
+
+    CACertificateUpdateRequest:
+      type: object
+      properties:
+        certificateContent:
+          type: string
     UserDefinedLocalAuthenticatorCreation:
       description: This represents the configuration for creating the user defined local authenticator.
       type: object
